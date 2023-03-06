@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'home/tabs/korzinka_page.dart';
+import 'home/tabs/korzinka/korzinka_page.dart';
 import 'home/tabs/texnomart/texnomart_page.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,36 +1,36 @@
-import 'package:bottom_menu/core/api/pagination_api.dart';
+import 'package:bottom_menu/pages/home/home_page.dart';
+import 'package:bottom_menu/pages/home/tabs/korzinka/bloc/korzinka_bloc/korzinka_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'bloc/texnomart_bloc.dart';
 
-class TexnomartPage extends StatefulWidget {
-  const TexnomartPage({Key? key}) : super(key: key);
+import '../../../../core/api/pagination_api.dart';
+import '../texnomart/bloc/texnomart_bloc.dart';
+
+class KorzinkaPage extends StatefulWidget {
+  const KorzinkaPage({Key? key}) : super(key: key);
 
   @override
-  State<TexnomartPage> createState() => _TexnomartPageState();
+  State<KorzinkaPage> createState() => _KorzinkaPageState();
 }
 
-class _TexnomartPageState extends State<TexnomartPage> {
-  final bloc = TexnomartBloc(PaginationApi());
+class _KorzinkaPageState extends State<KorzinkaPage> {
+  final bloc = KorzinkaBloc(PaginationApi());
   final controller = RefreshController();
 
   @override
   void initState() {
-    bloc.add(TexnomartInitEvent());
-    // print("initState: Texnomart");
+    bloc.add(KorzinkaInitEvent());
+    // print("initState: Korzinka");
     // context.read<HomeProvider>().addListener(() {
-    //   // if(context.read<HomeProvider>().index==0){
-    //   //
-    //   // }
-    //   print("Texnomart: ${context.read<HomeProvider>().index}");
+    //   print("Korzinka: ${context.read<HomeProvider>().index}");
     // });
     super.initState();
   }
 
   @override
   void dispose() {
-    print("dispose: Texnomart");
+    print("dispose: Korzinka");
     bloc.close();
     controller.dispose();
     super.dispose();
@@ -40,19 +40,19 @@ class _TexnomartPageState extends State<TexnomartPage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: bloc,
-      child: BlocListener<TexnomartBloc, TexnomartState>(
+      child: BlocListener<KorzinkaBloc, KorzinkaState>(
         listener: (context, state) {
           if (state.status == Status.success) {
             controller.refreshCompleted();
             controller.loadComplete();
           }
         },
-        child: BlocBuilder<TexnomartBloc, TexnomartState>(
+        child: BlocBuilder<KorzinkaBloc, KorzinkaState>(
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.yellow,
-                title: const Text("Texnomart", style: TextStyle(color: Colors.black)),
+                backgroundColor: Colors.red,
+                title: const Text("Korzinka", style: TextStyle(color: Colors.white)),
               ),
               body: Builder(builder: (context) {
                 if (state.status == Status.loading && state.list.isEmpty) {
@@ -63,14 +63,15 @@ class _TexnomartPageState extends State<TexnomartPage> {
                   enablePullDown: true,
                   enablePullUp: true,
                   onRefresh: () {
-                    bloc.add(TexnomartInitEvent());
+                    bloc.add(KorzinkaInitEvent());
                   },
                   onLoading: () {
-                    bloc.add(TexnomartNextEvent());
+                    bloc.add(KorzinkaNextEvent());
                   },
                   child: ListView.builder(
                     itemCount: state.list.length,
                     itemBuilder: (BuildContext context, int index) {
+                      print("list page: ${state.list.length}");
                       var model = state.list[index];
                       return Card(
                         elevation: 2,
@@ -81,7 +82,7 @@ class _TexnomartPageState extends State<TexnomartPage> {
                               Column(
                                 children: [
                                   Image.network(
-                                    "https://backend.texnomart.uz/${model.image}",
+                                    "https://api.lebazar.uz/${model.images![0].mediumUrl}",
                                     height: 100,
                                     width: 100,
                                   ),
@@ -92,22 +93,22 @@ class _TexnomartPageState extends State<TexnomartPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      model.name,
+                                      "${index + 1}. ${model.name!}",
                                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                       softWrap: true,
                                       maxLines: 2,
                                     ),
                                     Text(
-                                      "Sale price: ${model.fSalePrice}",
-                                      style: TextStyle(fontSize: 16),
+                                      "${model.price} sum",
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                                      softWrap: true,
+                                      maxLines: 2,
                                     ),
                                     Text(
-                                      "Loan price: ${model.fLoanPrice}",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Monthly price: ${model.axiomMonthlyPrice}",
-                                      style: TextStyle(fontSize: 14),
+                                      "1 ${model.measurement!.code}",
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                                      softWrap: true,
+                                      maxLines: 2,
                                     ),
                                   ],
                                 ),

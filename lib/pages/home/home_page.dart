@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'tabs/korzinka_page.dart';
+import 'tabs/korzinka/korzinka_page.dart';
 import 'tabs/texnomart/texnomart_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,8 +32,8 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: context.watch<HomeProvider>().index,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
         onTap: (value) {
           context.read<HomeProvider>().onChangedTab(value);
         },
