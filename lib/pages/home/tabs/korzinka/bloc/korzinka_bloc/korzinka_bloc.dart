@@ -23,16 +23,17 @@ class KorzinkaBloc extends Bloc<KorzinkaEvent, KorzinkaState> {
       } catch (e) {}
     });
     on<KorzinkaNextEvent>((event, emit) async {
-      print("bloc shart: ${state.limit >= state.count}");
+      print("bloc shart: ${state.limit <= state.count}");
       print("bloc limit: ${state.limit}");
       print("bloc count: ${state.count}");
       if (state.limit <= state.count) {
         emit(state.copyWith(status: Status.loading));
         try {
           final model = await _api.searchProducts(search: state.search, start: state.limit, limit: state.limit + 15);
-          emit(state.copyWith(
-              status: Status.success, list: [...state.list, ...model], start: state.limit, limit: state.limit + 15, count: state.count));
+          emit(state.copyWith(status: Status.success, list: [...state.list, ...model], start: state.limit, limit: state.limit + 15, count: state.count));
         } catch (e) {}
+      } else {
+        return;
       }
     });
     on<KorzinkaSearchEvent>((event, emit) async {
