@@ -7,22 +7,24 @@ import '../models/list.dart';
 class PaginationApi {
   final _dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 60)));
 
-  Future<KorzinkaModel> productsByKorzinka({
-    String search = "",
-    int start = 0,
-    int limit = 15
-  }) async {
-    final response = await _dio.get(
-      "https://api.lebazar.uz/api/v1/search/product?start=$start&limit=$limit&searchKey=$search", options: Options(headers: {"companyId" : 78}));
+  Future<KorzinkaModel> productsByKorzinka({String search = "", int start = 0, int limit = 15}) async {
+    final response = await _dio.get("https://api.lebazar.uz/api/v1/search/product?start=$start&limit=$limit&searchKey=$search",
+        options: Options(headers: {"companyId": 78}));
     var korzinka = KorzinkaNewModel.fromJson(response.data["data"]);
     // var item = KorzinkaItem.fromJson(response.data["data"]["list"]);
     print("api: ${response.data}");
     print("api: ${response.data["data"]}");
     return response.data;
   }
-  
-  Future<int> productCount () async {
-    final response = await _dio.get("https://api.lebazar.uz/api/v1/search/product", options: Options(headers: {"companyId": 78}));
+
+  Future<int> productCount({
+    int start = 0,
+    int limit = 15,
+    String search = ""
+  }) async {
+    final response = await _dio.get(
+        "https://api.lebazar.uz/api/v1/search/product?start=$start&limit=$limit&searchKey=$search",
+        options: Options(headers: {"companyId": 78}));
     var data = response.data["data"]["count"] as int;
     print("api count: $data");
     return data;
@@ -31,11 +33,13 @@ class PaginationApi {
   Future<List<EbazarItem>> searchProducts({
     int start = 0,
     int limit = 15,
-    String search = "",}) async {
+    String search = "",
+  }) async {
     print('start');
     final response = await _dio.get(
       "https://api.lebazar.uz/api/v1/search/product?start=$start&limit=$limit&searchKey=$search",
-      options: Options(headers: {"companyId": 78}),);
+      options: Options(headers: {"companyId": 78}),
+    );
     print(response.data.toString());
     return List<EbazarItem>.from(response.data["data"]['list'].map((x) => EbazarItem.fromJson(x)));
   }
@@ -48,5 +52,4 @@ class PaginationApi {
     // print("api: ${response.data}");
     return TexnomartModel.fromJson(response.data["data"]);
   }
-
 }

@@ -23,19 +23,25 @@ class KorzinkaBloc extends Bloc<KorzinkaEvent, KorzinkaState> {
       } catch (e) {}
     });
     on<KorzinkaNextEvent>((event, emit) async {
-      if (state.limit >= state.count) return;
-      emit(state.copyWith(status: Status.loading));
-      try {
-        final model = await _api.searchProducts(search: state.search, start: state.limit, limit: state.limit + 15);
-        emit(state.copyWith(
-            status: Status.success, list: [...state.list, ...model], start: state.limit, limit: state.limit + 15, count: state.count));
-      } catch (e) {}
+      print("bloc shart: ${state.limit >= state.count}");
+      print("bloc limit: ${state.limit}");
+      print("bloc count: ${state.count}");
+      if (state.limit <= state.count) {
+        emit(state.copyWith(status: Status.loading));
+        try {
+          final model = await _api.searchProducts(search: state.search, start: state.limit, limit: state.limit + 15);
+          emit(state.copyWith(
+              status: Status.success, list: [...state.list, ...model], start: state.limit, limit: state.limit + 15, count: state.count));
+        } catch (e) {}
+      }
     });
     on<KorzinkaSearchEvent>((event, emit) async {
-      emit(state.copyWith(status: Status.loading, search: event.text, start: state.limit, limit: state.limit + 15, list: [], count: state.count));
+      emit(state.copyWith(status: Status.loading, search: event.text, start: 0, limit: 0, list: [], count: 0));
       try {
         final model = await _api.searchProducts(search: state.search);
-        emit(state.copyWith(status: Status.success, list: model, start: state.limit, limit: state.limit + 15, count: state.count));
+        final count = await _api.productCount(search: event.text);
+        print("bloc product count: $count");
+        emit(state.copyWith(status: Status.success, list: model, start: state.limit, limit: state.limit + 15, count: count));
       } catch (e) {}
     });
   }
