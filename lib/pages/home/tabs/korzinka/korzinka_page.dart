@@ -53,6 +53,7 @@ class _KorzinkaPageState extends State<KorzinkaPage> {
     print("dispose: Korzinka");
     bloc.close();
     controller.dispose();
+    _searchQuery.dispose();
     super.dispose();
   }
 

@@ -53,6 +53,7 @@ class _TexnomartPageState extends State<TexnomartPage> {
     print("dispose: Texnomart");
     bloc.close();
     controller.dispose();
+    _searchQuery.dispose();
     super.dispose();
   }
 
