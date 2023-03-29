@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
         index: context.watch<HomeProvider>().index,
         children: const [
           KorzinkaPage(),
-
           TexnomartPage(),
         ],
       ),
